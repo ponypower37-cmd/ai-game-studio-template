@@ -410,7 +410,15 @@ AI не является финальным судьёй fun.
 
 ## 15. Context discipline
 
-Worker при старте читает только:
+Producer перед первым production round читает полное обязательное ядро:
+
+1. `STUDIO.md`;
+2. `GAME.md`;
+3. `agents.md`;
+4. `ORCA.md`;
+5. `roles/producer.md`.
+
+Implementation worker при старте читает только:
 
 1. `roles/_common.md`;
 2. свою role instruction;
@@ -427,7 +435,9 @@ Worker **не читает автоматически**:
 - прошлые conversations;
 - весь Orca history.
 
-`GAME.md` должен оставаться короткой constitution, а не энциклопедией.
+`GAME.md` содержит GDD текущего вертикального среза. Producer извлекает из него только relevant truth в Batch spec; implementation worker не должен читать весь GDD без необходимости.
+
+Детальная truth растущих feature переносится в feature-local документы, чтобы `GAME.md` оставался ограничен текущим slice, а не становился энциклопедией всей будущей игры.
 
 ---
 
@@ -437,12 +447,12 @@ Routing выбирает:
 
 > самую дешёвую разрешённую модель, которая достаточно сильна для задачи.
 
-Порядок:
+Готовый порядок, не требующий project setup:
 
-1. Free eligible model.
-2. Stronger/equivalent free model.
-3. Paid normal model.
-4. Senior paid model для leverage/escalation.
+1. `OpenCode → OmniRoute → eligible free model`.
+2. Stronger/equivalent free route.
+3. Codex/Claude paid normal.
+4. Codex/Claude senior для leverage/escalation.
 5. Human gate, если policy требует.
 
 Сильная paid model не должна по умолчанию писать весь проект в одиночку.
@@ -453,7 +463,7 @@ Routing выбирает:
 
 ### Provider resilience
 
-Исчерпание Claude/GPT quota **не останавливает Studio целиком**.
+Исчерпание Codex/Claude quota **не останавливает Studio целиком**.
 
 Если paid routes недоступны, Studio входит в `FREE_ONLY` mode:
 

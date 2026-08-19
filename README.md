@@ -1,106 +1,82 @@
-# AI Game Studio — Orca Production Pack
+# Personal AI Game Studio
 
-Финальный минимальный production-пакет для разработки Unity и browser/TypeScript игр несколькими AI-agents через Orca.
+Готовый личный production-шаблон для разработки Unity и browser/TypeScript игр через Orca и Git.
 
-## Цель
-
-Studio должна ускорять выпуск **accepted playable changes**, а не увеличивать количество задач, документов или запущенных agents.
-
-Основной flow:
-
-`Human Intent → Player Outcome → Atomic Cards → Batch → Orca Task/Workspace → Implementation → Integration → QA/Playtest → Design/Narrative Verdict → next Outcome`
-
-## Runtime stack
-
-- **Orca** — execution layer: Run, Task, Dispatch, Workspace/worktree, Board, terminal lifecycle.
-- **Git** — durable source of truth для code, design truth, canon и backlog.
-- **OpenCode + OmniRoute** — основной бесплатный worker pool.
-- **Claude / GPT-Codex** — платные senior/escalation capabilities по `agents.md`.
-- **Caveman** — default для paid Claude/GPT sessions, когда совместим, без повреждения точных specs/contracts.
-
-## Provider resilience
-
-Studio проектируется так, чтобы исчерпание Claude/GPT quota не останавливало production.
-
-Если paid routes недоступны:
-
-`NORMAL → FREE_ONLY`
-
-В `FREE_ONLY` все compatible Ready Batches продолжают выполняться бесплатными workers. Блокируется только конкретная работа, которой действительно нужна senior capability.
-
-In-progress work при provider failure сохраняется и передаётся replacement worker; задача не стартует с нуля без необходимости.
-
-## Roles
-
-- `Producer` — coordination, batching, routing, integration flow.
-- `Game Designer` — professional systems/game design, balance, progression, economy, pacing, design diagnosis.
-- `Narrative Designer / Writer` — canon, voice, dialogue, lore и consistent player-facing narrative.
-- `Architect` — high-risk system contracts и boundaries.
-- `Developer` — implementation.
-- `UI Developer` — UI implementation и presentation.
-- `QA / Playtester` — integrated evidence/findings.
-- `Reviewer` — conditional high-risk review.
-
-Отдельных Integrator, Scrum Master, Documentation Agent, Memory Agent и Monitoring Agent v1 нет.
+Studio оптимизирована под один результат: **accepted playable change** — изменение игры, которое можно запустить, проверить и оценить глазами игрока.
 
 ## Быстрый старт
 
-1. Заполни `GAME.md`.
-2. Если проект действительно имеет persistent canon — скопируй `templates/NARRATIVE.md` в корень как `NARRATIVE.md`.
-3. Настрой текущие free/paid routes в `agents.md` без привязки role architecture к одной модели.
-4. Запусти Producer с `START_PROMPT.md`.
-5. Producer создаёт/обновляет Outcome и Atomic Cards.
-6. Связанные Cards квантуются в context-local Batches.
-7. На исполняемый Batch создаётся Orca Task + Workspace/worktree + Dispatch.
-8. Orca Workspace Board — единственная визуальная execution board.
-9. После integration запускаются risk-appropriate gates и playtest.
-10. Gameplay Design Findings идут Game Designer'у; narrative/canon findings — Narrative Designer'у.
-11. После acceptance переходи к следующему Outcome.
+1. Создай новый репозиторий из этого шаблона.
+2. Заполни `GAME.md` как GDD вертикального среза.
+3. Открой `START_PROMPT.md` и передай его Producer без дополнительных инструкций.
+
+На первом production round Producer сам:
+
+1. читает обязательное ядро Studio и GDD;
+2. проверяет репозиторий и текущий Orca state;
+3. формулирует первый Player Outcome;
+4. создаёт Outcome и Atomic Cards в Git;
+5. собирает Cards в context-local Batches;
+6. выбирает готовый route по `agents.md`;
+7. запускает независимые workstreams через Orca;
+8. интегрирует и проверяет playable result.
+
+Никакой настройки ролей или model routes перед стартом не требуется.
+
+## Готовые defaults
+
+- **Execution:** Orca Task, Dispatch, Workspace/worktree и Board.
+- **Durable truth:** Git.
+- **Free workers:** `OpenCode → OmniRoute → eligible free model`.
+- **Escalation:** stronger free route, затем Codex/Claude только по capability или evidence провала.
+- **Provider resilience:** при недоступности paid surfaces Studio продолжает free-capable работу в `FREE_ONLY`.
+- **Flow:** Kanban-style continuous flow без обязательных Scrum-ритуалов.
+- **Parallelism:** по ownership; один active writer на authoritative gameplay fact.
+- **Unity:** отдельные coding worktrees разрешены, heavy Editor gates ограничены, scene/prefab имеют exclusive writer.
+- **Browser:** strict TypeScript, targeted tests, Playwright только для критичных player flows.
+
+## Как устроена работа
+
+`Human intent → Player Outcome → Atomic Cards → context-local Batches → Orca workstreams → integration → playtest → verdict`
+
+Player Outcome — наблюдаемое изменение опыта игрока. Task, Batch, agent и commit — средства доставки результата, а не метрики успеха.
+
+Если игра работает технически, но она скучная, медленная, непонятная или не даёт решений, это **Design Finding**:
+
+`playtest → finding → diagnosis → hypothesis → change → re-playtest`
 
 ## Source of truth
 
-- `GAME.md` — короткая constitution игры.
-- Feature design truth — рядом с соответствующей системой/документом.
-- `NARRATIVE.md` — только durable canon, если он вообще нужен.
-- `tasks/open/` — durable atomic backlog.
-- Orca — только текущий operational execution state.
+- `GAME.md` — GDD текущего вертикального среза и глобальные design constraints.
+- `tasks/outcomes/` — durable Player Outcomes.
+- `tasks/open/` — durable Atomic Cards.
+- Feature-local документы — детальная design truth конкретных систем.
+- `NARRATIVE.md` — persistent canon, только когда он действительно появился.
+- Git — code, assets, decisions и backlog.
+- Orca — только текущий operational state.
 
 Conversation history не является source of truth.
 
-## Что НЕ строить без доказанного failure mode
+## Обязательное ядро Producer
 
-- собственную Jira/board;
-- orchestration framework поверх Orca;
-- vector DB / persistent agent memory;
-- monitoring daemon;
-- custom scheduler;
-- dashboards;
-- event bus;
-- autonomous agent society;
-- massive documentation system;
-- infrastructure «на будущее».
+Producer перед началом читает:
 
-## Основные файлы
+1. `STUDIO.md` — production rules;
+2. `GAME.md` — GDD вертикального среза;
+3. `agents.md` — готовая cost/capability policy;
+4. `ORCA.md` — execution protocol;
+5. `roles/producer.md` — authority и triggers.
 
-- `STUDIO.md` — production constitution.
-- `START_PROMPT.md` — bootstrap Producer.
-- `ORCA.md` — использование native Orca primitives.
-- `agents.md` — capability/cost routing, Free-Only и provider failover.
-- `CODE_QUALITY.md` — compact engineering policy для AI-written code.
-- `GAME.md` — template project constitution.
-- `PILOT.md` — что измерить до ужесточения правил.
-- `roles/` — responsibilities.
-- `workflows/unity.md` — Unity gates/worktrees/serialized assets.
-- `workflows/browser.md` — TypeScript/browser quality and lifecycle.
-- `workflows/design-iteration.md` — gameplay design iteration loop.
-- `templates/` — Outcome/Card/Finding и optional `NARRATIVE.md`.
+Остальные role/workflow документы читаются только когда соответствующая capability или project profile реально нужна.
 
-## Правило изменения Studio
+## Главные ограничения
 
-Новая policy/script/tool добавляется только если:
+- Human задаёт direction и принимает major design gates.
+- Producer координирует, но не заменяет implementation workers.
+- Не запускать максимум агентов ради активности.
+- Не держать двух active writers на одном authoritative fact или recovery worktree.
+- Не редактировать Unity serialized YAML вручную.
+- Не превращать Design Finding в обычный Bug.
+- Не добавлять process, role, tool или infrastructure без наблюдаемого failure mode.
 
-1. наблюдался реальный failure mode или один дорогой failure;
-2. стоимость failure можно объяснить/измерить;
-3. новая мера дешевле повторения проблемы.
-
-Если процесс начинает тормозить playable changes — сначала упрощать Studio, а не добавлять ещё один слой.
+Главная метрика: **time to accepted playable change**.
