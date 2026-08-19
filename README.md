@@ -23,17 +23,12 @@ Studio оптимизирована под один результат: **accept
 
 Никакой настройки ролей или model routes перед стартом не требуется.
 
-## Готовые defaults
+## Что уже настроено
 
-- **Execution:** Orca Task, Dispatch, Workspace/worktree и Board.
-- **Durable truth:** Git.
-- **Free workers:** `OpenCode → OmniRoute → eligible free model`.
-- **Escalation:** stronger free route, затем Codex/Claude только по capability или evidence провала.
-- **Provider resilience:** при недоступности paid surfaces Studio продолжает free-capable работу в `FREE_ONLY`.
-- **Flow:** Kanban-style continuous flow без обязательных Scrum-ритуалов.
-- **Parallelism:** по ownership; один active writer на authoritative gameplay fact.
-- **Unity:** отдельные coding worktrees разрешены, heavy Editor gates ограничены, scene/prefab имеют exclusive writer.
-- **Browser:** strict TypeScript, targeted tests, Playwright только для критичных player flows.
+- Orca ведёт задачи, workers, worktree и текущий статус работы.
+- Git хранит код, GDD, решения, Outcomes и Cards.
+- Сначала используются бесплатные workers через OpenCode и OmniRoute; Codex/Claude подключаются для сложной работы.
+- Unity и browser/TypeScript-проекты имеют свои готовые правила разработки и проверки.
 
 ## Как устроена работа
 
@@ -45,7 +40,7 @@ Player Outcome — наблюдаемое изменение опыта игро
 
 `playtest → finding → diagnosis → hypothesis → change → re-playtest`
 
-## Source of truth
+## Что хранится в проекте
 
 - `GAME.md` — GDD текущего вертикального среза и глобальные design constraints.
 - `tasks/outcomes/` — durable Player Outcomes.
@@ -55,28 +50,4 @@ Player Outcome — наблюдаемое изменение опыта игро
 - Git — code, assets, decisions и backlog.
 - Orca — только текущий operational state.
 
-Conversation history не является source of truth.
-
-## Обязательное ядро Producer
-
-Producer перед началом читает:
-
-1. `STUDIO.md` — production rules;
-2. `GAME.md` — GDD вертикального среза;
-3. `agents.md` — готовая cost/capability policy;
-4. `ORCA.md` — execution protocol;
-5. `roles/producer.md` — authority и triggers.
-
-Остальные role/workflow документы читаются только когда соответствующая capability или project profile реально нужна.
-
-## Главные ограничения
-
-- Human задаёт direction и принимает major design gates.
-- Producer координирует, но не заменяет implementation workers.
-- Не запускать максимум агентов ради активности.
-- Не держать двух active writers на одном authoritative fact или recovery worktree.
-- Не редактировать Unity serialized YAML вручную.
-- Не превращать Design Finding в обычный Bug.
-- Не добавлять process, role, tool или infrastructure без наблюдаемого failure mode.
-
-Главная метрика: **time to accepted playable change**.
+Остальные файлы — внутренние инструкции для Producer и workers. Владельцу проекта достаточно заполнить `GAME.md` и запустить `START_PROMPT.md`.
