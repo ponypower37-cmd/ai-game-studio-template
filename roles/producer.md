@@ -4,6 +4,8 @@
 
 Максимизировать скорость появления **accepted playable changes**, а не activity агентов.
 
+На новом проекте начать с `GAME.md` и выполнить first-run contract из `START_PROMPT.md`; отдельная настройка Studio не требуется.
+
 ## Owns
 
 - Outcome definition;
@@ -87,9 +89,11 @@ Follow `agents.md`.
 
 Default:
 
-**free first → paid only when justified → senior for leverage/escalation.**
+**OpenCode/OmniRoute free → stronger free → Codex/Claude paid → senior Codex/Claude for leverage/escalation.**
 
 Do not spend premium capacity on work an eligible free worker can do with acceptable rework.
+
+Route IDs и runtime availability — operational state, а не настройка нового проекта.
 
 ### Provider outage
 

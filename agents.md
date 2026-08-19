@@ -2,11 +2,17 @@
 
 ## 1. Главный принцип
 
+Studio уже имеет готовую личную routing policy. Новый проект не требует настройки role-to-model mapping или route IDs.
+
 Producer выбирает не «самую сильную модель», а:
 
 > самую дешёвую разрешённую модель, которая достаточно сильна для конкретной задачи.
 
-Owner может вручную override'ить любой Batch.
+Default ladder:
+
+`OpenCode → OmniRoute eligible free → stronger free → Codex/Claude paid normal → Codex/Claude senior`
+
+Owner может вручную override'ить любой Batch, но отсутствие override не блокирует запуск.
 
 Статическая role architecture не привязана к конкретным моделям: providers и модели могут меняться без переписывания ролей.
 
@@ -20,19 +26,13 @@ Owner может вручную override'ить любой Batch.
 
 Использовать как default путь к бесплатным моделям и бесплатным fallback routes.
 
-Studio policy — **free-first**. Не полагаться на economic defaults router'а, если они сначала расходуют subscription/paid quota. Настройка route должна отражать policy Studio.
+Studio policy — **free-first**. Producer явно выбирает free-capable route и не расходует subscription/paid quota только потому, что она доступна.
 
-### Claude
+### Codex / Claude
 
-Paid/high-quality surface.
+Paid normal и senior surface.
 
-Использовать для задач, где free route не соответствует capability/quality policy, и для senior leverage.
-
-### GPT / Codex
-
-Paid/high-quality surface.
-
-Использовать по тем же принципам: не как default bulk worker, а когда capability/quality оправдывает расход.
+Использовать, когда free routes не соответствуют required capability/quality policy, доказанно провалили acceptance или когда senior reasoning даёт leverage дешёвым workers.
 
 Другие surfaces можно добавлять только при реальном capability/cost benefit.
 
@@ -164,7 +164,7 @@ Provider failure и quality failure — разные причины.
 
 ## 6. Caveman policy
 
-Для платных Claude/GPT workers Caveman — default, если совместим с используемым surface/session.
+Для платных Codex/Claude workers Caveman — default, если совместим с используемым surface/session.
 
 Но Caveman не имеет права повреждать точные данные:
 
@@ -183,41 +183,17 @@ Provider failure и quality failure — разные причины.
 
 ---
 
-## 7. Routing fields
+## 7. Ready-to-use routing defaults
 
-Для route/model можно поддерживать статическое описание:
+Для каждого Batch использовать первый доступный route с достаточной capability:
 
-```yaml
-id: example-free-code
-surface: opencode
-cost_tier: free
-capabilities:
-  code_reasoning: strong
-  vision: false
-  computer_control: false
-roles:
-  - developer
-priority: 10
-requires_owner_approval: false
-caveman: false
-max_quality_attempts_before_escalation: 2
-```
+1. `OpenCode → OmniRoute → eligible free model`.
+2. Stronger eligible free model/provider.
+3. Codex или Claude в normal paid capacity.
+4. Codex или Claude в senior capacity для architecture, diagnosis, difficult debugging или recovery.
+5. Owner gate только для manual-only/major-cost решения.
 
-Для premium:
-
-```yaml
-id: example-senior
-surface: claude
-cost_tier: premium
-capabilities:
-  code_reasoning: very_strong
-  architecture: very_strong
-roles:
-  - architect
-  - reviewer
-requires_owner_approval: true
-caveman: true
-```
+Конкретный volatile model ID выбирается во время Dispatch из доступных моделей. Он не является project setup и не хранится как роль Studio.
 
 ### Не хранить volatile provider status в Git
 
@@ -241,12 +217,11 @@ Producer проверяет availability/quota при планировании w
 Для каждого Batch Producer:
 
 1. определяет required capabilities;
-2. исключает routes, нарушающие Owner policy;
-3. проверяет runtime availability;
-4. сортирует eligible routes по cost;
-5. выбирает cheapest route с достаточной capability;
-6. сохраняет fallback ladder;
-7. эскалирует только по evidence.
+2. проверяет runtime availability;
+3. применяет готовую ladder из раздела 7;
+4. выбирает cheapest route с достаточной capability;
+5. сохраняет fallback в operational context;
+6. эскалирует только по evidence.
 
 Не отправлять trivial Batch senior-модели только потому, что quota сейчас доступна.
 
@@ -263,7 +238,7 @@ Free pool доступен; paid routes могут использоваться 
 Включается, если:
 
 - Owner явно требует free-only;
-- Claude/GPT quota исчерпаны;
+- Codex/Claude quota исчерпаны;
 - paid surfaces недоступны/сломаны;
 - budget policy временно запрещает paid.
 

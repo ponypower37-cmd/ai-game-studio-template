@@ -1,7 +1,7 @@
-# GAME — Project Constitution
+# GAME — Vertical Slice GDD
 
-> Этот файл должен быть коротким. Не превращать его в полный GDD.
-> Детали отдельных systems хранить в authoritative feature design truth рядом с соответствующей системой/документом.
+> Главный вход нового проекта. Заполни этот файл до запуска `START_PROMPT.md`.
+> Описывай только вертикальный срез, который реально должен стать playable. Не проектируй всю будущую игру.
 
 ## 1. Working Title
 
@@ -9,9 +9,9 @@
 
 ## 2. High Concept
 
-`TODO: 2–5 предложений`
+`TODO: 2–5 предложений — что это за игра, что делает игрок и чем опыт отличается.`
 
-## 3. Player Fantasy
+## 3. Target Player Experience
 
 Игрок должен чувствовать:
 
@@ -19,97 +19,156 @@
 - `TODO`
 - `TODO`
 
-## 4. Core Loop
+Не должен чувствовать:
+
+- `TODO`
+- `TODO`
+
+## 4. Vertical Slice Promise
+
+После запуска slice игрок может:
+
+- `TODO: начать игру/сессию`;
+- `TODO: выполнить основной набор действий`;
+- `TODO: принять хотя бы одно meaningful decision`;
+- `TODO: получить заметный результат или трансформацию`;
+- `TODO: завершить slice понятным финалом/следующей целью`.
+
+Ожидаемая длительность одной проверки: `TODO`.
+
+## 5. Core Loop
 
 ```text
-TODO
+TODO: observe / choose
 ↓
-TODO
+TODO: act
 ↓
-TODO
+TODO: resolve consequence
 ↓
-meaningful reward / transformation
+TODO: reward / transformation / new option
 ↓
-repeat with new decisions
+repeat with a new decision
 ```
 
-## 5. Primary Player Goal
+## 6. Player Goal and Failure
 
-`TODO`
+Primary goal: `TODO`
 
-## 6. Current Progression Structure
+Success state: `TODO`
 
-Крупные этапы:
+Failure/pressure state: `TODO`
+
+Recovery/retry behavior: `TODO`
+
+## 7. Mechanics Included in the Slice
+
+| Mechanic/System | Player-facing purpose | Minimum playable behavior |
+|---|---|---|
+| `TODO` | `TODO` | `TODO` |
+
+## 8. Content Included
+
+| Content type | Slice budget | Required examples/notes |
+|---|---:|---|
+| Levels/arenas/rooms | `TODO` | `TODO` |
+| Enemies/challenges | `TODO` | `TODO` |
+| Items/abilities/resources | `TODO` | `TODO` |
+| UI screens/states | `TODO` | `TODO` |
+| Narrative content | `TODO` | `TODO or none` |
+
+## 9. Progression and Economy
+
+Start state: `TODO`
+
+Progression steps:
 
 1. `TODO`
 2. `TODO`
 3. `TODO`
 
-## 7. Global Gameplay Invariants
+Resources/currencies and sinks:
 
-Правила, которые нельзя молча переопределять в feature code:
+| Resource | Earned by | Spent/used for | Intended decision |
+|---|---|---|---|
+| `TODO` | `TODO` | `TODO` | `TODO` |
+
+## 10. UX and Readability
+
+- Required controls/input: `TODO`.
+- First-use teaching: `TODO`.
+- Critical feedback: `TODO`.
+- Required HUD/information: `TODO`.
+- Accessibility/readability constraints: `TODO`.
+
+## 11. Art, Audio and Presentation Direction
+
+- Visual target/reference: `TODO`.
+- Camera/presentation: `TODO`.
+- Required feedback/VFX: `TODO`.
+- Required audio/music: `TODO`.
+- Acceptable prototype shortcuts: `TODO`.
+
+## 12. Technical Profile
+
+- Engine/Profile: `Unity 6 | Browser/TypeScript`.
+- Target platform: `TODO`.
+- Input devices: `TODO`.
+- Save/persistence required: `no | yes — describe minimum`.
+- Existing project/repository state: `TODO`.
+- Required integrations/dependencies: `TODO or none`.
+- Performance constraints: `TODO`.
+
+## 13. Global Gameplay Invariants
+
+Rules that workers must not silently redefine:
 
 - `TODO`
 - `TODO`
 - `TODO`
 
-## 8. Hard Design Constraints
+## 14. Scope and Non-goals
+
+The vertical slice includes:
 
 - `TODO`
 - `TODO`
 
-## 9. Scope Constraints
-
-Не делаем сейчас:
+Do not build now:
 
 - `TODO`
 - `TODO`
-
-## 10. UX / Readability Constraints
-
-- `TODO`
 - `TODO`
 
-## 11. Technical Project Profile
+## 15. Acceptance
 
-- Engine/Profile: `Unity | Browser Prototype`
-- Primary language: `C# | TS/JS`
-- Target platform: `TODO`
+The slice is accepted when:
 
-## 12. Current Milestone / Outcome
+- [ ] `TODO: clean-start player flow works`.
+- [ ] `TODO: core loop can be completed`.
+- [ ] `TODO: meaningful decision and consequence are observable`.
+- [ ] `TODO: success/failure/retry behavior works`.
+- [ ] `TODO: required technical gate passes`.
+- [ ] Human completes final fun/pacing/feel verdict.
 
-`TODO`
+## 16. Authoritative Truth Map
 
-## 13. Authoritative Feature Truth Map
-
-| Feature / Fact | Authoritative location |
+| Feature/Fact | Authoritative location |
 |---|---|
-| Core progression | `TODO` |
-| Economy | `TODO` |
-| Save/Persistence | `TODO` |
-| UI contracts | `TODO` |
-| Narrative / canon | `NARRATIVE.md if persistent narrative exists; otherwise GAME.md/Card` |
+| Vertical slice intent and global rules | `GAME.md` |
+| Core progression | `GAME.md until feature-local truth is created` |
+| Economy | `GAME.md until feature-local truth is created` |
+| Save/Persistence | `TODO path or GAME.md` |
+| UI contracts | `TODO path or GAME.md` |
+| Narrative/canon | `NARRATIVE.md if persistent canon exists; otherwise GAME.md/Card` |
 
-## 14. Terminology
+## 17. Terminology
 
 | Term | Meaning |
 |---|---|
 | `TODO` | `TODO` |
 
-## 15. Narrative State
+## 18. Human-only Gates
 
-Persistent narrative present?
+In addition to Studio-wide gates, Human approval is required for:
 
-`no | yes`
-
-If `yes`, authoritative file:
-
-`NARRATIVE.md`
-
-Do not create it for a project that only has isolated labels/tooltips.
-
-## 16. Human-only Gates
-
-Project-specific additions to global Studio gates:
-
-- `TODO if any`
+- `TODO if any; otherwise none`.
